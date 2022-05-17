@@ -53,7 +53,6 @@ void TicTacToe::printBoard(int **b) {
         }
         cout << endl;
     }
-    cout << endl;
 }
 
 void TicTacToe::swapValues(int** b1, int** b2) {
@@ -76,27 +75,23 @@ void TicTacToe::copyBoard(int** board1, int** board2) { //from first to second
 
 void TicTacToe::GEN_ALL_POS_MOV(){
 
-    bool flag = true;
+    //if the board shows winning pos print 0
     copyBoard(board, buffor);
+    if (checkIfsbWin(buffor)) {
+        cout << "0" << endl;
+        return;
+    }
+    
+    cout << getAmountOfPossibleMoves(board) << endl; //to print f
 
     for (int y = 0; y < Y; y++)
     {
         for (int x = 0; x < X; x++) {
             if (board[y][x] == 0) {
                 buffor[y][x] = player;
-
-                if (checkIfsbWin(buffor)) {
-                    cout << "0" << endl;
-                    //printBoard(buffor);
-                }
-                else {
-                    
-                    if(flag) cout << getAmountOfPossibleMoves(board) << endl; //to print f
-                    flag = false;
-                    printBoard(buffor);
-                }
-                     copyBoard(board, buffor);
-            }
+                printBoard(buffor);
+             }
+             copyBoard(board, buffor);
         }
     }
 }
@@ -115,12 +110,6 @@ int TicTacToe::getAmountOfPossibleMoves(int** board) {
 
 bool TicTacToe::checkIfsbWin(int** board) {
 
-    //check if vertical char is assigned
-
-    /*const int NUM_TO_WIN = 3;
-    const int X_MAX = 7, Y_MAX = 7; // for real these are defined elsewhere*/
-
-    // used by loops to count "x in a line for a player":
     int prevVal = 0; // 1=player1, 2=player2, 0=no owner. Player who occupied the previous space
     int numInRow = 0; // how many of prevValue has we seen before this
 
@@ -135,11 +124,10 @@ bool TicTacToe::checkIfsbWin(int** board) {
                     return true;
                 }
             }
-        }
-        
+        } 
     }
 
-    prevVal = 0; 
+   prevVal = 0;
     numInRow = 0;
     for (int j = 0; j < X; j++) { // every row
         prevVal = 0; // at row start we aren't counting in-a-row for either player
@@ -165,11 +153,11 @@ bool TicTacToe::checkIfsbWin(int** board) {
         for (int x = 0; x < X; x++) {
             curVal = board[y][x];
             //cout << "c:" <<curVal << endl;
-            printBoard(board);
+            //printBoard(board);
             int xt = x, yt = y;
-
+            numInRow = 0;
             while (yt < Y && xt < X) {
-                cout << "c" << board[yt][xt] << endl;
+               // cout << "c" << board[yt][xt] <<  endl;
                 if (board[yt][xt] == curVal)
                     numInRow++;
                 else {
@@ -177,7 +165,6 @@ bool TicTacToe::checkIfsbWin(int** board) {
                     break;
                 }
                 if (numInRow >= NUM_TO_WIN && curVal != 0) {
-                    cout << "here";
                     return true;
                 }
                    
@@ -188,12 +175,14 @@ bool TicTacToe::checkIfsbWin(int** board) {
     }
     //from the right upper corner to the bottom
     prevVal = 0;
-    numInRow = 0;
+
     for (int y = 0; y < Y; y++) {
         for (int x = 0; x < X; x++) {
+            numInRow = 0;
             curVal = board[y][x];
             int xt = x, yt = y;
-            while (yt < Y && xt > 0) {
+            while (yt < Y && xt >= 0) {
+               // cout << "c" << board[yt][xt] << endl;
                 if (board[yt][xt] == curVal)
                     numInRow++;
                 else{
