@@ -49,9 +49,9 @@ void TicTacToe::printBoard(int **b) {
     for (int y = 0; y < Y; y++)
     {
         for (int x = 0; x < X; x++) {
-            cout << b[y][x] << " ";
+            printf("%d ", b[y][x]);
         }
-        cout << endl;
+        printf("\n");
     }
 }
 
@@ -78,11 +78,11 @@ void TicTacToe::GEN_ALL_POS_MOV(){
     //if the board shows winning pos print 0
     copyBoard(board, buffor);
     if (checkIfsbWin(buffor)) {
-        cout << "0" << endl;
+        printf("0\n");
         return;
     }
     
-    cout << getAmountOfPossibleMoves(board) << endl; //to print f
+    printf("%d\n", getAmountOfPossibleMoves(board));
 
     for (int y = 0; y < Y; y++)
     {
