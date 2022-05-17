@@ -1,7 +1,4 @@
-﻿// NMKSolver.cpp : Ten plik zawiera funkcję „main”. W nim rozpoczyna się i kończy wykonywanie programu.
-//
-
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 
 using namespace std;
@@ -16,9 +13,13 @@ public:
     void printBoard(int** board);
     void swapValues(int** b1, int** b2);
     void copyBoard(int** b1, int** b2);
-    void GEN_ALL_POS_MOV();
     int getAmountOfPossibleMoves(int** board);
     bool checkIfsbWin(int** board);
+
+    void GEN_ALL_POS_MOV();
+    void GEN_ALL_POS_MOV_CUT_IF_GAME_OVER();
+
+    
 };
 
 
@@ -96,6 +97,46 @@ void TicTacToe::GEN_ALL_POS_MOV(){
     }
 }
 
+void TicTacToe::GEN_ALL_POS_MOV_CUT_IF_GAME_OVER()
+{
+
+    copyBoard(board, buffor);
+    if (checkIfsbWin(buffor)) {
+        printf("0\n");
+        return;
+    }
+
+    
+
+    for (int y = 0; y < Y; y++)
+    {
+        for (int x = 0; x < X; x++) {
+            if (board[y][x] == 0) {
+                buffor[y][x] = player;
+                if (checkIfsbWin(buffor)) {
+                    printf("1\n");
+                    printBoard(buffor);
+                    return;
+                }       
+            }
+            copyBoard(board, buffor);
+        }
+    }
+
+    printf("%d\n", getAmountOfPossibleMoves(board));
+
+    for (int y = 0; y < Y; y++)
+    {
+        for (int x = 0; x < X; x++) {
+            if (board[y][x] == 0) {
+                buffor[y][x] = player;
+                printBoard(buffor);
+            }
+            copyBoard(board, buffor);
+        }
+    }
+}
+
 int TicTacToe::getAmountOfPossibleMoves(int** board) {
     int amount = 0;
     for (int y = 0; y < Y; y++)
@@ -127,7 +168,7 @@ bool TicTacToe::checkIfsbWin(int** board) {
         } 
     }
 
-   prevVal = 0;
+    prevVal = 0;
     numInRow = 0;
     for (int j = 0; j < X; j++) { // every row
         prevVal = 0; // at row start we aren't counting in-a-row for either player
@@ -206,7 +247,6 @@ int main()
     //board szie NxM
     //size of line to win 
     int player;
-    //int **board;
     string command;
 
     while (cin >> command) {
@@ -216,11 +256,10 @@ int main()
 
         if (command == "GEN_ALL_POS_MOV") {
             game.GEN_ALL_POS_MOV();
-            //cout << endl;
-            //game.printBoard(game.board);
         }
-
-        
+        else if (command == "GEN_ALL_POS_MOV_CUT_IF_GAME_OVER") {
+            game.GEN_ALL_POS_MOV_CUT_IF_GAME_OVER();
+        }
 
     }
 }
