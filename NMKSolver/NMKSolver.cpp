@@ -116,7 +116,7 @@ bool TicTacToe::checkIfsbWin(int** board) {
     for (int j = 0; j < Y; j++) { // every row
         prevVal = 0; // at row start we aren't counting in-a-row for either player
         for (int i = 0; i < X; i++) { // walk through this row:
-            int curVal = board[i][j];
+            int curVal = board[j][i];
             if (curVal != prevVal) { prevVal = curVal; numInRow = 1; }
             else { // we found a repeat:
                 numInRow++;
@@ -132,7 +132,7 @@ bool TicTacToe::checkIfsbWin(int** board) {
     for (int j = 0; j < X; j++) { // every row
         prevVal = 0; // at row start we aren't counting in-a-row for either player
         for (int i = 0; i < Y; i++) { // walk through this row:
-            int curVal = board[j][i];
+            int curVal = board[i][j];
             if (curVal != prevVal) { prevVal = curVal; numInRow = 1; }
             else { // we found a repeat:
                 numInRow++;
@@ -216,6 +216,8 @@ int main()
 
         if (command == "GEN_ALL_POS_MOV") {
             game.GEN_ALL_POS_MOV();
+            //cout << endl;
+            //game.printBoard(game.board);
         }
 
         
