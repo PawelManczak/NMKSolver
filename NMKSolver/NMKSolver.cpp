@@ -3,22 +3,25 @@
 
 using namespace std;
 
+
 class TicTacToe {
 public:
     int Y, X, NUM_TO_WIN;
     int** board, **buffor;
     int player;
-    int curVal;
+    int curVal; //if checkIfSbWin returns true it will have a value of winner player
     TicTacToe(int Y, int X, int NUM_TO_WIN, int player);
     void printBoard(int** board);
     void swapValues(int** b1, int** b2);
     void copyBoard(int** b1, int** b2);
     int getAmountOfPossibleMoves(int** board);
     bool checkIfsbWin(int** board);
-
+    void SOLVE_GAME_STATE();
     void GEN_ALL_POS_MOV();
     void GEN_ALL_POS_MOV_CUT_IF_GAME_OVER();
-
+private:
+    int checkWinner(int** board);
+    int minmax(int** b, int turn);
     
 };
 
@@ -137,6 +140,23 @@ void TicTacToe::GEN_ALL_POS_MOV_CUT_IF_GAME_OVER()
     }
 }
 
+int TicTacToe::checkWinner(int** b)
+{
+    if (checkIfsbWin(b)) {
+        if (curVal == 1)
+            return 1;
+        else if (curVal == 2)
+            return 2;
+    }
+    else
+    return 0;
+}
+
+int TicTacToe::minmax(int** b, int turn)
+{
+    return 0;
+}
+
 int TicTacToe::getAmountOfPossibleMoves(int** board) {
     int amount = 0;
     for (int y = 0; y < Y; y++)
@@ -157,7 +177,7 @@ bool TicTacToe::checkIfsbWin(int** board) {
     for (int j = 0; j < Y; j++) { // every row
         prevVal = 0; // at row start we aren't counting in-a-row for either player
         for (int i = 0; i < X; i++) { // walk through this row:
-            int curVal = board[j][i];
+            curVal = board[j][i];
             if (curVal != prevVal) { prevVal = curVal; numInRow = 1; }
             else { // we found a repeat:
                 numInRow++;
@@ -173,7 +193,7 @@ bool TicTacToe::checkIfsbWin(int** board) {
     for (int j = 0; j < X; j++) { // every row
         prevVal = 0; // at row start we aren't counting in-a-row for either player
         for (int i = 0; i < Y; i++) { // walk through this row:
-            int curVal = board[i][j];
+            curVal = board[i][j];
             if (curVal != prevVal) { prevVal = curVal; numInRow = 1; }
             else { // we found a repeat:
                 numInRow++;
@@ -240,6 +260,33 @@ bool TicTacToe::checkIfsbWin(int** board) {
     }
 
     return false;
+}
+
+void TicTacToe::SOLVE_GAME_STATE()
+{
+    if (checkWinner(board) == 1) {
+        printf("FIRST_PLAYER_WINS\n");
+        return;
+    }
+    else if (checkWinner(board) == 2) {
+        printf("SECOND_PLAYER_PLAYER_WINS\n");
+        return;
+    }
+        
+
+    for (int y = 0; y < Y; y++)
+    {
+        for (int x = 0; x < X; x++) {
+            if (board[y][x] == 0) {
+                buffor[y][x] = player;
+                printBoard(buffor);
+            }
+            copyBoard(board, buffor);
+        }
+    }
+
+    
+          
 }
 int main()
 {
