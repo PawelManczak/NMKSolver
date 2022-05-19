@@ -3,6 +3,15 @@
 
 using namespace std;
 
+int min(int a, int b) {
+    if (a > b) return b;
+    else return a;
+}
+
+int max(int a, int b) {
+    if (a < b) return b;
+    else return a;
+}
 
 class TicTacToe {
 public:
@@ -145,7 +154,7 @@ int TicTacToe::checkWinner(int** b)
     if (checkIfsbWin(b)) {
         if (curVal == 1)
             return 1;
-        else if (curVal == 2)
+        else //if (curVal == 2)
             return 2;
     }
     else
@@ -154,7 +163,47 @@ int TicTacToe::checkWinner(int** b)
 
 int TicTacToe::minmax(int** b, int turn)
 {
-    return 0;
+    if (checkIfsbWin(b)) {
+        if (curVal == turn)
+            return 1;
+        else //if (curVal == 2)
+            return -1;
+    }
+    if (getAmountOfPossibleMoves(b) == 0)
+        return 0;
+
+    int nextTurn = turn == 1 ? 2 : 1;
+
+    if (turn == 1) {
+        int bestScore = -2;
+        for (int i = 0; i < Y; i++) {
+            for (int j = 0; j < X; j++) {
+                // Is the spot available?
+                if (b[i][j] == 0) {
+                    b[i][j] = turn;
+                    int score = minmax(board, nextTurn);
+                    b[i][j] = 0;
+                    bestScore = max(score, bestScore);
+                }
+            }
+        }
+        return bestScore;
+    }
+    else {
+        int bestScore = INT_MAX;
+        for (int i = 0; i < Y; i++) {
+            for (int j = 0; j < X; j++) {
+                // Is the spot available?
+                if (board[i][j] == 0) {
+                    board[i][j] = turn;
+                    int score = minmax(board, nextTurn);
+                    board[i][j] = 0;
+                    bestScore = min(score, bestScore);
+                }
+            }
+        }
+        return bestScore;
+    }
 }
 
 int TicTacToe::getAmountOfPossibleMoves(int** board) {
@@ -269,21 +318,46 @@ void TicTacToe::SOLVE_GAME_STATE()
         return;
     }
     else if (checkWinner(board) == 2) {
-        printf("SECOND_PLAYER_PLAYER_WINS\n");
+        printf("SECOND_PLAYER_WINS\n");
         return;
     }
         
+    copyBoard(board, buffor);
 
-    for (int y = 0; y < Y; y++)
+    while (!checkIfsbWin(board) && getAmountOfPossibleMoves(buffor)!=0)
     {
-        for (int x = 0; x < X; x++) {
-            if (board[y][x] == 0) {
-                buffor[y][x] = player;
-                printBoard(buffor);
+        int bestScore = -2;
+        int bestY, bestX;
+        for (int y = 0; y < Y; y++)
+        {
+            for (int x = 0; x < X; x++) {
+                if (board[y][x] == 0) {
+                    buffor[y][x] = player;
+                    int score = minmax(buffor, player);
+                    buffor[y][x] = 0;
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestX = x;
+                        bestY = y;
+                    }
+                }
+                copyBoard(board, buffor);
             }
-            copyBoard(board, buffor);
         }
+        board[bestY][bestX] = player;
+        player = player == 1 ? 2 : 1;
+
     }
+
+    if (checkWinner(board) == 1) {
+        printf("FIRST_PLAYER_WINS\n");
+        return;
+    }
+    else if (checkWinner(board) == 2) {
+        printf("SECOND_PLAYER_WINS\n");
+        return;
+    }
+    
 
     
           
@@ -306,6 +380,9 @@ int main()
         }
         else if (command == "GEN_ALL_POS_MOV_CUT_IF_GAME_OVER") {
             game.GEN_ALL_POS_MOV_CUT_IF_GAME_OVER();
+        }
+        else if (command == "SOLVE_GAME_STATE") {
+            game.SOLVE_GAME_STATE();
         }
 
     }
