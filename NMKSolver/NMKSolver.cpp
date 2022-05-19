@@ -1,4 +1,5 @@
-﻿#include <iostream>
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
 #include <string>
 
 using namespace std;
@@ -52,7 +53,8 @@ TicTacToe::TicTacToe(int Y, int X, int NUM_TO_WIN, int player)
     for (int y = 0; y < Y; y++)
     {
         for (int x = 0; x < X; x++) {
-            cin >> board[y][x];
+            scanf("%d", &board[y][x]);
+            //cin >> board[y][x];
         }
     }
 }
@@ -364,14 +366,19 @@ void TicTacToe::SOLVE_GAME_STATE()
 }
 int main()
 {
-    int N, M, K;
+    int N = -1, M = -1, K = -1;
     //board szie NxM
     //size of line to win 
-    int player;
-    string command;
+    int player = -1;
+    string command = " ";
 
-    while (cin >> command) {
-        cin >> N >> M >> K >> player;
+    char tmp[25];
+
+
+    while (scanf("%24s", tmp) != EOF) {
+        command = tmp;
+        scanf("%d %d %d %d", &N, &M, &K, &player);
+        //cin >> N >> M >> K >> player;
         TicTacToe game = TicTacToe(N, M, K, player);
         
 
