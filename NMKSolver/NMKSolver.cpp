@@ -17,7 +17,7 @@ int max(int a, int b) {
 class TicTacToe {
 public:
     int Y, X, NUM_TO_WIN;
-    int** board, **buffor;
+    int** board, ** buffor;
     int player;
     int curVal; //if checkIfSbWin returns true it will have a value of winner player
     TicTacToe(int Y, int X, int NUM_TO_WIN, int player);
@@ -32,7 +32,7 @@ public:
 private:
     int checkWinner(int** board);
     int minmax(int** b, int turn);
-    
+
 };
 
 
@@ -59,7 +59,7 @@ TicTacToe::TicTacToe(int Y, int X, int NUM_TO_WIN, int player)
     }
 }
 
-void TicTacToe::printBoard(int **b) {
+void TicTacToe::printBoard(int** b) {
 
     for (int y = 0; y < Y; y++)
     {
@@ -88,7 +88,7 @@ void TicTacToe::copyBoard(int** board1, int** board2) { //from first to second
     }
 }
 
-void TicTacToe::GEN_ALL_POS_MOV(){
+void TicTacToe::GEN_ALL_POS_MOV() {
 
     //if the board shows winning pos print 0
     copyBoard(board, buffor);
@@ -96,7 +96,7 @@ void TicTacToe::GEN_ALL_POS_MOV(){
         printf("0\n");
         return;
     }
-    
+
     printf("%d\n", getAmountOfPossibleMoves(board));
 
     for (int y = 0; y < Y; y++)
@@ -105,8 +105,8 @@ void TicTacToe::GEN_ALL_POS_MOV(){
             if (board[y][x] == 0) {
                 buffor[y][x] = player;
                 printBoard(buffor);
-             }
-             copyBoard(board, buffor);
+            }
+            copyBoard(board, buffor);
         }
     }
 }
@@ -120,7 +120,7 @@ void TicTacToe::GEN_ALL_POS_MOV_CUT_IF_GAME_OVER()
         return;
     }
 
-    
+
 
     for (int y = 0; y < Y; y++)
     {
@@ -131,7 +131,7 @@ void TicTacToe::GEN_ALL_POS_MOV_CUT_IF_GAME_OVER()
                     printf("1\n");
                     printBoard(buffor);
                     return;
-                }       
+                }
             }
             copyBoard(board, buffor);
         }
@@ -160,7 +160,7 @@ int TicTacToe::checkWinner(int** b)
             return 2;
     }
     else
-    return 0;
+        return 0;
 }
 
 int TicTacToe::minmax(int** b, int turn)
@@ -236,7 +236,7 @@ bool TicTacToe::checkIfsbWin(int** board) {
                     return true;
                 }
             }
-        } 
+        }
     }
 
     prevVal = 0;
@@ -269,7 +269,7 @@ bool TicTacToe::checkIfsbWin(int** board) {
             int xt = x, yt = y;
             numInRow = 0;
             while (yt < Y && xt < X) {
-               // cout << "c" << board[yt][xt] <<  endl;
+                // cout << "c" << board[yt][xt] <<  endl;
                 if (board[yt][xt] == curVal)
                     numInRow++;
                 else {
@@ -279,7 +279,7 @@ bool TicTacToe::checkIfsbWin(int** board) {
                 if (numInRow >= NUM_TO_WIN && curVal != 0) {
                     return true;
                 }
-                   
+
                 yt++;
                 xt++;
             }
@@ -294,10 +294,10 @@ bool TicTacToe::checkIfsbWin(int** board) {
             curVal = board[y][x];
             int xt = x, yt = y;
             while (yt < Y && xt >= 0) {
-               // cout << "c" << board[yt][xt] << endl;
+                // cout << "c" << board[yt][xt] << endl;
                 if (board[yt][xt] == curVal)
                     numInRow++;
-                else{
+                else {
                     numInRow = 0;
                     break;
                 }
@@ -323,10 +323,10 @@ void TicTacToe::SOLVE_GAME_STATE()
         printf("SECOND_PLAYER_WINS\n");
         return;
     }
-        
+
     copyBoard(board, buffor);
 
-    while (!checkIfsbWin(board) && getAmountOfPossibleMoves(buffor)!=0)
+    while (!checkIfsbWin(board) && getAmountOfPossibleMoves(buffor) != 0)
     {
         int bestScore = -2;
         int bestY, bestX;
@@ -359,10 +359,10 @@ void TicTacToe::SOLVE_GAME_STATE()
         printf("SECOND_PLAYER_WINS\n");
         return;
     }
-    
 
-    
-          
+
+
+
 }
 int main()
 {
@@ -372,15 +372,15 @@ int main()
     int player = -1;
     string command = " ";
 
-    char tmp[25];
+    char tmp[50];
 
 
-    while (scanf("%24s", tmp) != EOF) {
+    while (scanf("%49s", &tmp) != EOF) {
         command = tmp;
         scanf("%d %d %d %d", &N, &M, &K, &player);
         //cin >> N >> M >> K >> player;
         TicTacToe game = TicTacToe(N, M, K, player);
-        
+
 
         if (command == "GEN_ALL_POS_MOV") {
             game.GEN_ALL_POS_MOV();
