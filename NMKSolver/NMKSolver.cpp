@@ -329,7 +329,7 @@ void TicTacToe::SOLVE_GAME_STATE()
 
     copyBoard(board, buffor);
 
-    while (!checkIfsbWin(board) && getAmountOfPossibleMoves(buffor) != 0)
+    while (!checkIfsbWin(board) && getAmountOfPossibleMoves(board) != 0)
     {
         int bestScore = -2;
         int bestY, bestX;
@@ -337,9 +337,9 @@ void TicTacToe::SOLVE_GAME_STATE()
         {
             for (int x = 0; x < X; x++) {
                 if (board[y][x] == 0) {
-                    buffor[y][x] = player;
-                    int score = minmax(buffor, player);
-                    buffor[y][x] = 0;
+                    board[y][x] = player;
+                    int score = minmax(board, player);
+                    board[y][x] = 0;
                     if (score > bestScore) {
                         bestScore = score;
                         bestX = x;
@@ -361,6 +361,9 @@ void TicTacToe::SOLVE_GAME_STATE()
     else if (checkWinner(board) == 2) {
         printf("SECOND_PLAYER_WINS\n");
         return;
+    }
+    else {
+        printf("BOTH_PLAYERS_TIE\n");
     }
 
 
