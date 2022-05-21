@@ -176,16 +176,18 @@ int TicTacToe::minmax(int** b, int turn)
 
     int nextTurn = turn == 1 ? 2 : 1;
 
+    bool flag = true;
     if (turn == 1) {
         int bestScore = -2;
-        for (int i = 0; i < Y; i++) {
-            for (int j = 0; j < X; j++) {
+        for (int i = 0; i < Y && flag; i++) {
+            for (int j = 0; j < X && flag; j++) {
                 // Is the spot available?
                 if (b[i][j] == 0) {
                     b[i][j] = turn;
                     int score = minmax(board, nextTurn);
                     b[i][j] = 0;
                     bestScore = max(score, bestScore);
+                    if (bestScore == 1) flag = false;
                 }
             }
         }
@@ -193,14 +195,15 @@ int TicTacToe::minmax(int** b, int turn)
     }
     else {
         int bestScore = INT_MAX;
-        for (int i = 0; i < Y; i++) {
-            for (int j = 0; j < X; j++) {
+        for (int i = 0; i < Y && flag; i++) {
+            for (int j = 0; j < X && flag; j++) {
                 // Is the spot available?
                 if (board[i][j] == 0) {
                     board[i][j] = turn;
                     int score = minmax(board, nextTurn);
                     board[i][j] = 0;
                     bestScore = min(score, bestScore);
+                    if (bestScore == -1) flag = false;
                 }
             }
         }
