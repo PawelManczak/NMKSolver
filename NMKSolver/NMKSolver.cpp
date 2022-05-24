@@ -162,11 +162,20 @@ int TicTacToe::checkWinner(int** b)
     else
         return 0;
 }
-
+int getOpponent(int activePlayer)
+{
+    if (activePlayer == 1)
+        return 2;
+    else
+        return 1;
+}
 int TicTacToe::minmax(int** b, int turn)
 {
+    //cout << endl;
+    //printBoard(b);
+    int bestScore = 0;
     if (checkIfsbWin(b)) {
-        if (curVal == turn)
+        if (curVal == 1)
             return 1;
         else //if (curVal == 2)
             return -1;
@@ -174,41 +183,40 @@ int TicTacToe::minmax(int** b, int turn)
     if (getAmountOfPossibleMoves(b) == 0)
         return 0;
 
-    int nextTurn = turn == 1 ? 2 : 1;
+    int nextTurn = getOpponent(turn);
 
     bool flag = true;
     if (turn == 1) {
-        int bestScore = -2;
+        bestScore = -1;
         for (int i = 0; i < Y && flag; i++) {
             for (int j = 0; j < X && flag; j++) {
                 // Is the spot available?
                 if (b[i][j] == 0) {
                     b[i][j] = turn;
-                    int score = minmax(board, nextTurn);
+
+                    bestScore = max(minmax(b, nextTurn), bestScore);
                     b[i][j] = 0;
-                    bestScore = max(score, bestScore);
                     if (bestScore == 1) flag = false;
                 }
             }
         }
-        return bestScore;
     }
     else {
-        int bestScore = INT_MAX;
+        bestScore = 1;
         for (int i = 0; i < Y && flag; i++) {
             for (int j = 0; j < X && flag; j++) {
                 // Is the spot available?
                 if (board[i][j] == 0) {
                     board[i][j] = turn;
-                    int score = minmax(board, nextTurn);
+
+                    bestScore = min(minmax(b, nextTurn), bestScore);
                     board[i][j] = 0;
-                    bestScore = min(score, bestScore);
                     if (bestScore == -1) flag = false;
                 }
             }
         }
-        return bestScore;
     }
+    return bestScore;
 }
 
 int TicTacToe::getAmountOfPossibleMoves(int** board) {
@@ -267,8 +275,6 @@ bool TicTacToe::checkIfsbWin(int** board) {
     for (int y = 0; y < Y; y++) {
         for (int x = 0; x < X; x++) {
             curVal = board[y][x];
-            //cout << "c:" <<curVal << endl;
-            //printBoard(board);
             int xt = x, yt = y;
             numInRow = 0;
             while (yt < Y && xt < X) {
@@ -318,51 +324,27 @@ bool TicTacToe::checkIfsbWin(int** board) {
 
 void TicTacToe::SOLVE_GAME_STATE()
 {
-    if (checkWinner(board) == 1) {
-        printf("FIRST_PLAYER_WINS\n");
-        return;
-    }
-    else if (checkWinner(board) == 2) {
-        printf("SECOND_PLAYER_WINS\n");
-        return;
-    }
 
-    copyBoard(board, buffor);
-
-    while (!checkIfsbWin(board) && getAmountOfPossibleMoves(board) != 0)
+    int score = 0;
+    if (!checkIfsbWin(board) && getAmountOfPossibleMoves(board) != 0)
     {
-        int bestScore = -2;
-        int bestY, bestX;
-        for (int y = 0; y < Y; y++)
-        {
-            for (int x = 0; x < X; x++) {
-                if (board[y][x] == 0) {
-                    board[y][x] = player;
-                    int score = minmax(board, player);
-                    board[y][x] = 0;
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestX = x;
-                        bestY = y;
-                    }
-                }
-                copyBoard(board, buffor);
-            }
-        }
-        board[bestY][bestX] = player;
-        player = player == 1 ? 2 : 1;
-
+        score = minmax(board, player);
     }
-
-    if (checkWinner(board) == 1) {
+    if (checkIfsbWin(board)) {
+        if (curVal == 1)
+            score = 1;
+        else //if (curVal == 2)
+            score = -1;
+    }
+    if (score == 1) {
         printf("FIRST_PLAYER_WINS\n");
         return;
     }
-    else if (checkWinner(board) == 2) {
+    else if (score == -1) {
         printf("SECOND_PLAYER_WINS\n");
         return;
     }
-    else {
+    else if (score == 0) {
         printf("BOTH_PLAYERS_TIE\n");
     }
 
