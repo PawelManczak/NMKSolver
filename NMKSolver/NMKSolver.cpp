@@ -356,27 +356,26 @@ int main()
 {
     int N = -1, M = -1, K = -1;
     //board szie NxM
-    //size of line to win 
+    //size of K line to win 
     int player = -1;
-    string command = " ";
+    //string command = " ";
 
-    char tmp[50];
+    char command[50];
 
 
-    while (scanf("%49s", &tmp) != EOF) {
-        command = tmp;
+    while (scanf("%49s", &command) != EOF) {
+
         scanf("%d %d %d %d", &N, &M, &K, &player);
-        //cin >> N >> M >> K >> player;
         TicTacToe game = TicTacToe(N, M, K, player);
 
-
-        if (command == "GEN_ALL_POS_MOV") {
+        
+        if (!strcmp("GEN_ALL_POS_MOV", command)) {
             game.GEN_ALL_POS_MOV();
         }
-        else if (command == "GEN_ALL_POS_MOV_CUT_IF_GAME_OVER") {
+        else if (!strcmp("GEN_ALL_POS_MOV_CUT_IF_GAME_OVER", command)) {
             game.GEN_ALL_POS_MOV_CUT_IF_GAME_OVER();
         }
-        else if (command == "SOLVE_GAME_STATE") {
+        else if (!strcmp("SOLVE_GAME_STATE", command)){
             game.SOLVE_GAME_STATE();
         }
 
