@@ -15,24 +15,22 @@ int max(int a, int b) {
 }
 
 class TicTacToe {
-public:
-    int Y, X, NUM_TO_WIN;
-    int** board, ** buffor;
-    int player;
-    int curVal; //if checkIfSbWin returns true it will have a value of winner player
+public:    
     TicTacToe(int Y, int X, int NUM_TO_WIN, int player);
-    void printBoard(int** board);
-    void swapValues(int** b1, int** b2);
-    void copyBoard(int** b1, int** b2);
-    int getAmountOfPossibleMoves(int** board);
-    bool checkIfsbWin(int** board);
     void SOLVE_GAME_STATE();
     void GEN_ALL_POS_MOV();
     void GEN_ALL_POS_MOV_CUT_IF_GAME_OVER();
 private:
+    int Y, X, NUM_TO_WIN;
+    int** board, ** buffor;
+    int player;
+    int curVal; //if checkIfSbWin returns true it will have a value of winner player
+    void printBoard(int** board);
+    void copyBoard(int** b1, int** b2);
+    int getAmountOfPossibleMoves(int** board);
+    bool checkIfsbWin(int** board);
     int checkWinner(int** board);
     int minmax(int** b, int turn);
-
 };
 
 
@@ -54,7 +52,6 @@ TicTacToe::TicTacToe(int Y, int X, int NUM_TO_WIN, int player)
     {
         for (int x = 0; x < X; x++) {
             scanf("%d", &board[y][x]);
-            //cin >> board[y][x];
         }
     }
 }
@@ -67,15 +64,6 @@ void TicTacToe::printBoard(int** b) {
             printf("%d ", b[y][x]);
         }
         printf("\n");
-    }
-}
-
-void TicTacToe::swapValues(int** b1, int** b2) {
-    for (int y = 0; y < Y; y++)
-    {
-        for (int x = 0; x < X; x++) {
-            swap(b1[y][x], b2[y][x]);
-        }
     }
 }
 
@@ -120,8 +108,6 @@ void TicTacToe::GEN_ALL_POS_MOV_CUT_IF_GAME_OVER()
         return;
     }
 
-
-
     for (int y = 0; y < Y; y++)
     {
         for (int x = 0; x < X; x++) {
@@ -164,15 +150,10 @@ int TicTacToe::checkWinner(int** b)
 }
 int getOpponent(int activePlayer)
 {
-    if (activePlayer == 1)
-        return 2;
-    else
-        return 1;
+    return activePlayer == 1 ? 2 : 1;
 }
 int TicTacToe::minmax(int** b, int turn)
 {
-    //cout << endl;
-    //printBoard(b);
     int bestScore = 0;
     if (checkIfsbWin(b)) {
         if (curVal == 1)
@@ -190,10 +171,8 @@ int TicTacToe::minmax(int** b, int turn)
         bestScore = -1;
         for (int i = 0; i < Y && flag; i++) {
             for (int j = 0; j < X && flag; j++) {
-                // Is the spot available?
-                if (b[i][j] == 0) {
+                if (b[i][j] == 0) { //the spot is avaible
                     b[i][j] = turn;
-
                     bestScore = max(minmax(b, nextTurn), bestScore);
                     b[i][j] = 0;
                     if (bestScore == 1) flag = false;
@@ -205,10 +184,8 @@ int TicTacToe::minmax(int** b, int turn)
         bestScore = 1;
         for (int i = 0; i < Y && flag; i++) {
             for (int j = 0; j < X && flag; j++) {
-                // Is the spot available?
                 if (board[i][j] == 0) {
                     board[i][j] = turn;
-
                     bestScore = min(minmax(b, nextTurn), bestScore);
                     board[i][j] = 0;
                     if (bestScore == -1) flag = false;
@@ -233,15 +210,18 @@ int TicTacToe::getAmountOfPossibleMoves(int** board) {
 
 bool TicTacToe::checkIfsbWin(int** board) {
 
-    int prevVal = 0; // 1=player1, 2=player2, 0=no owner. Player who occupied the previous space
-    int numInRow = 0; // how many of prevValue has we seen before this
+    int prevVal = 0; //Player who occupied the previous space
+    int numInRow = 0; 
 
-    for (int j = 0; j < Y; j++) { // every row
-        prevVal = 0; // at row start we aren't counting in-a-row for either player
-        for (int i = 0; i < X; i++) { // walk through this row:
-            curVal = board[j][i];
-            if (curVal != prevVal) { prevVal = curVal; numInRow = 1; }
-            else { // we found a repeat:
+    for (int y = 0; y < Y; y++) { 
+        prevVal = 0;
+        for (int x = 0; x < X; x++) { 
+            curVal = board[y][x];
+            if (curVal != prevVal) { 
+                prevVal = curVal; 
+                numInRow = 1; 
+            }
+            else {
                 numInRow++;
                 if (numInRow >= NUM_TO_WIN && curVal != 0) {
                     return true;
@@ -252,12 +232,15 @@ bool TicTacToe::checkIfsbWin(int** board) {
 
     prevVal = 0;
     numInRow = 0;
-    for (int j = 0; j < X; j++) { // every row
-        prevVal = 0; // at row start we aren't counting in-a-row for either player
-        for (int i = 0; i < Y; i++) { // walk through this row:
-            curVal = board[i][j];
-            if (curVal != prevVal) { prevVal = curVal; numInRow = 1; }
-            else { // we found a repeat:
+    for (int x = 0; x < X; x++) { 
+        prevVal = 0;
+        for (int y = 0; y < Y; y++) {
+            curVal = board[y][x];
+            if (curVal != prevVal) {
+                prevVal = curVal; 
+                numInRow = 1; 
+            }
+            else { 
                 numInRow++;
                 if (numInRow >= NUM_TO_WIN && curVal != 0) {
                     return true;
@@ -267,9 +250,7 @@ bool TicTacToe::checkIfsbWin(int** board) {
 
     }
 
-    //przkatna
     prevVal = 0;
-    numInRow = 0;
 
     //from the left to the bottom
     for (int y = 0; y < Y; y++) {
@@ -278,7 +259,6 @@ bool TicTacToe::checkIfsbWin(int** board) {
             int xt = x, yt = y;
             numInRow = 0;
             while (yt < Y && xt < X) {
-                // cout << "c" << board[yt][xt] <<  endl;
                 if (board[yt][xt] == curVal)
                     numInRow++;
                 else {
@@ -303,7 +283,6 @@ bool TicTacToe::checkIfsbWin(int** board) {
             curVal = board[y][x];
             int xt = x, yt = y;
             while (yt < Y && xt >= 0) {
-                // cout << "c" << board[yt][xt] << endl;
                 if (board[yt][xt] == curVal)
                     numInRow++;
                 else {
@@ -324,10 +303,9 @@ bool TicTacToe::checkIfsbWin(int** board) {
 
 void TicTacToe::SOLVE_GAME_STATE()
 {
-
     int score = 0;
-    if (!checkIfsbWin(board) && getAmountOfPossibleMoves(board) != 0)
-    {
+
+    if (!checkIfsbWin(board) && getAmountOfPossibleMoves(board) != 0) {
         score = minmax(board, player);
     }
     if (checkIfsbWin(board)) {
@@ -348,9 +326,6 @@ void TicTacToe::SOLVE_GAME_STATE()
         printf("BOTH_PLAYERS_TIE\n");
     }
 
-
-
-
 }
 int main()
 {
@@ -358,8 +333,6 @@ int main()
     //board szie NxM
     //size of K line to win 
     int player = -1;
-    //string command = " ";
-
     char command[50];
 
 
